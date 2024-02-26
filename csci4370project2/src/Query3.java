@@ -13,7 +13,7 @@ public class Query3 {
 
         try {
 
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/employees", "root", "Jakapple19");
+            connection = DriverManager.getConnection("jdbc:mysql://database-1.c94soiwsy7xp.us-east-1.rds.amazonaws.com:3306/employees", "admin", "password");
 
 
             String query = "SELECT d.dept_name AS department, " +
