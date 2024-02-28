@@ -70,24 +70,32 @@ import java.sql.*;
 
 public class Query2 {
     public static String executeQuery() {
+        // Database connection variables
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
 
         try {
+            // Retrieving database credentials from environment variables
             String username = System.getenv("DB_USERNAME");
-            System.out.println(username);
+            System.out.println(username); // Printing the username (for debugging purposes)
+
+            // Establishing a connection to the database
             connection = DriverManager.getConnection("jdbc:mysql://database-1.c94soiwsy7xp.us-east-1.rds.amazonaws.com:3306/employees", "admin", "password");
 
+            // SQL query to find the manager(s) with the longest office duration
             String query = "SELECT e.first_name, e.last_name, de.from_date, de.to_date " +
                     "FROM employees e " +
                     "JOIN dept_manager de ON e.emp_no = de.emp_no " +
-                    "WHERE de.to_date != '9999-01-01' " +
+                    "WHERE de.to_date != '9999-01-01' " + // Exclude managers with indefinite office tenure
                     "ORDER BY DATEDIFF(de.to_date, de.from_date) DESC LIMIT 1";
 
+            // Creating a prepared statement to execute the SQL query
             preparedStatement = connection.prepareStatement(query);
+            // Executing the query and obtaining the result set
             resultSet = preparedStatement.executeQuery();
 
+            // Building the result string based on the query results
             StringBuilder resultBuilder = new StringBuilder();
             if (resultSet.next()) {
                 String firstName = resultSet.getString("first_name");
@@ -105,6 +113,7 @@ public class Query2 {
             e.printStackTrace();
             return "Error executing Query 2";
         } finally {
+            // Closing database resources in the finally block to ensure proper cleanup
             try {
                 if (resultSet != null) resultSet.close();
                 if (preparedStatement != null) preparedStatement.close();

@@ -8,6 +8,7 @@ public class Query6 {
             int empNo1 = 11656; // example ID for E1
             int empNo2 = 11797; // example ID for E2
 
+            // SQL query to check 2-degree separation between two employees across different departments
             String query = "SELECT DISTINCT e1.emp_no AS E1, e3.emp_no AS E3, e2.emp_no AS E2, e1.dept_no AS D1, e2.dept_no AS D2 " +
                     "FROM dept_emp e1 " +
                     "INNER JOIN dept_emp e3 ON e1.dept_no = e3.dept_no AND e1.emp_no != e3.emp_no " +

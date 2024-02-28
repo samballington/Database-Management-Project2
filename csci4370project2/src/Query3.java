@@ -74,13 +74,16 @@ import java.sql.*;
 
 public class Query3 {
     public static String executeQuery() {
+        // Database connection variables
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
 
         try {
+            // Establishing a connection to the database
             connection = DriverManager.getConnection("jdbc:mysql://database-1.c94soiwsy7xp.us-east-1.rds.amazonaws.com:3306/employees", "admin", "password");
 
+            // SQL query to retrieve department-wise statistics on employee demographics
             String query = "SELECT d.dept_name AS department, " +
                     "FLOOR(YEAR(e.birth_date) / 10) * 10 AS decade, " +
                     "COUNT(*) AS num_employees, " +
@@ -92,9 +95,12 @@ public class Query3 {
                     "GROUP BY d.dept_name, FLOOR(YEAR(e.birth_date) / 10) * 10 " +
                     "ORDER BY department, decade";
 
+            // Creating a prepared statement to execute the SQL query
             preparedStatement = connection.prepareStatement(query);
+            // Executing the query and obtaining the result set
             resultSet = preparedStatement.executeQuery();
 
+            // Building the result string based on the query results
             StringBuilder resultBuilder = new StringBuilder();
             while (resultSet.next()) {
                 String department = resultSet.getString("department");
@@ -112,6 +118,7 @@ public class Query3 {
             e.printStackTrace();
             return "Error executing Query 3";
         } finally {
+            // Closing database resources in the finally block to ensure proper cleanup
             try {
                 if (resultSet != null) resultSet.close();
                 if (preparedStatement != null) preparedStatement.close();
@@ -120,4 +127,5 @@ public class Query3 {
                 e.printStackTrace();
             }
         }
-    }}
+    }
+}

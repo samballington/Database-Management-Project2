@@ -69,13 +69,16 @@ import java.sql.*;
 
 public class Query1 {
     public static String executeQuery() {
+        // Database connection variables
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
 
         try {
+            // Establishing a connection to the database
             connection = DriverManager.getConnection("jdbc:mysql://database-1.c94soiwsy7xp.us-east-1.rds.amazonaws.com:3306/employees", "admin", "password");
 
+            // SQL query to calculate the department with the maximum ratio of average female salaries to average male salaries
             String query = "SELECT d.dept_name AS department, " +
                     "(SUM(CASE WHEN e.gender = 'F' THEN s.salary ELSE 0 END) / " +
                     "SUM(CASE WHEN e.gender = 'M' THEN s.salary ELSE 0 END)) AS gender_salary_ratio " +
@@ -86,9 +89,12 @@ public class Query1 {
                     "GROUP BY d.dept_no " +
                     "ORDER BY gender_salary_ratio DESC LIMIT 1";
 
+            // Creating a prepared statement to execute the SQL query
             preparedStatement = connection.prepareStatement(query);
+            // Executing the query and obtaining the result set
             resultSet = preparedStatement.executeQuery();
 
+            // Building the result string based on the query results
             StringBuilder resultBuilder = new StringBuilder();
             if (resultSet.next()) {
                 String department = resultSet.getString("department");
@@ -103,6 +109,7 @@ public class Query1 {
             e.printStackTrace();
             return "Error executing Query 1";
         } finally {
+            // Closing database resources in the finally block to ensure proper cleanup
             try {
                 if (resultSet != null) resultSet.close();
                 if (preparedStatement != null) preparedStatement.close();
